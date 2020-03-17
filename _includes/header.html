@@ -1,23 +1,30 @@
-<header class="site-header">
-<nav class="navbar navbar-default navbar-inverse">
-  <div class="container">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="{{site.baseurl}}/">{{site.title}}</a>
-    </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+function myFunction() {
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse " id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="{{site.baseurl}}/about/">About</a></li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-</header>
+  const scroller = document.getElementById('myDIV');
+
+  let height = scroller.clientHeight;
+  let scrollHeight = scroller.scrollHeight - height;
+  let scrollTop = scroller.scrollTop;
+  let percent = Math.floor(scrollTop / scrollHeight * 100);
+
+  $.get(
+    "https://robot.mrel.de/nodered/scrollbar",
+    {pecentage: percent, user: document.cookie.match(new RegExp('(^| )username=([^;]+)'))[2], lesson: window.location.pathname },
+    function(data) {
+       console.log('yay');
+    }
+  );
+
+}
+
+if (document.cookie.match(new RegExp('(^| )username=([^;]+)'))){
+  console.log('is set');
+} else {
+  console.log('not set');
+  var person = prompt("Please enter your name", "Harry Potter");
+  document.cookie = "username=" + person;
+}
+
+</script>

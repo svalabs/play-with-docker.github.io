@@ -5,7 +5,7 @@ layout: default
 {% assign terms = page.terms | default: 1 %}
 <div class="panel-container">
     {% if terms > 0 %}
-    <div class="panel-left content">
+    <div id="myDIV" onscroll="myFunction()" class="panel-left content">
     {% else %}
     <div class="content panel-singular">
     {% endif %}

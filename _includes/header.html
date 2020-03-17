@@ -23,8 +23,11 @@ if (document.cookie.match(new RegExp('(^| )username=([^;]+)'))){
   console.log('is set');
 } else {
   console.log('not set');
+  var d = new Date();
+  d.setTime(d.getTime() + (30*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
   var person = prompt("Please enter your name", "Harry Potter");
-  document.cookie = "username=" + person;
+  document.cookie = "username=" + person + ";" + expires + ";path=/";
 }
 
 </script>

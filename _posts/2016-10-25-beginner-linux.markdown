@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Docker for Beginners - Linux"
-date:   2016-10-25
+date:   2019-08-01
 author: "@mikegcoleman"
 tags: [beginner, linux, operations, developer]
 categories: beginner
@@ -39,7 +39,7 @@ Use the following command to clone the lab's repo from GitHub (you can click the
 
 ### Make sure you have a DockerID
 
-If you do not have a DockerID (a free login used to access Docker Cloud, Docker Store, and Docker Hub), please visit [Docker Cloud](https://cloud.docker.com) and register for one. You will need this for later steps.
+If you do not have a DockerID (a free login used to access Docker Hub), please visit [Docker Hub](https://hub.docker.com) and register for one. You will need this for later steps.
 
 ## <a name="Task_1"></a>Task 1: Run some simple Docker containers
 
@@ -119,7 +119,7 @@ In the next example, we are going to run an Ubuntu Linux container on top of an 
 
 2. Run the following commands in the container.
 
-    `ls /` will list the contents of the root director in the container, `ps aux` will show running processes in the container, `cat /etc/issue` will show which Linux distro the container is running, in this case Ubuntu 18.04.1 LTS.
+    `ls /` will list the contents of the root director in the container, `ps aux` will show running processes in the container, `cat /etc/issue` will show which Linux distro the container is running, in this case Ubuntu 18.04.3 LTS.
 
    ```.term1
    ls /
@@ -324,7 +324,7 @@ Let's have a look at the  Dockerfile we'll be using, which builds a simple websi
     - [EXPOSE](https://docs.docker.com/engine/reference/builder/#expose) documents which ports the application uses.
     - [CMD](https://docs.docker.com/engine/reference/builder/#cmd) specifies what command to run when a container is started from the image. Notice that we can specify the command, as well as run-time arguments.
 
-3. In order to make the following commands more copy/paste friendly, export an environment variable containing your DockerID (if you don't have a DockerID you can get one for free via [Docker Cloud](https://cloud.docker.com)).
+3. In order to make the following commands more copy/paste friendly, export an environment variable containing your DockerID (if you don't have a DockerID you can get one for free via [Docker Hub](https://hub.docker.com)).
 
     You will have to manually type this command as it requires your unique DockerID.
 

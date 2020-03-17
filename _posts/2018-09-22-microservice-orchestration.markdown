@@ -254,7 +254,7 @@ https://plus.google.com/share?url=https://training.play-with-docker.com/
 http://www.linkedin.com/shareArticle?mini=true&url=https://training.play-with-docker.com/&title=Play%20with%20Docker%20Classroom&source=https://training.play-with-docker.com
 https://2018.dockercon.com/
 https://2018.dockercon.com/
-https://training.docker.com/instructor-led-training
+https://success.docker.com/training/
 https://community.docker.com/registrations/groups/4316
 https://docker.com
 https://www.docker.com
@@ -373,7 +373,7 @@ docker container run -it --rm linkextractor:step2 https://training.play-with-doc
 [[IMG]](http://www.linkedin.com/shareArticle?mini=true&url=https://training.play-with-docker.com/&title=Play%20with%20Docker%20Classroom&source=https://training.play-with-docker.com)
 [[IMG]](https://2018.dockercon.com/)
 [DockerCon 2018 in San Francisco](https://2018.dockercon.com/)
-[training.docker.com](https://training.docker.com/instructor-led-training)
+[training.docker.com](https://success.docker.com/training/)
 [Register here](https://community.docker.com/registrations/groups/4316)
 [Docker, Inc.](https://docker.com)
 [[IMG]](https://www.docker.com)
@@ -582,7 +582,7 @@ In this step the following changes have been made since the last step:
 
 In this step we are planning to run two separate containers, one for the API and the other for the web interface.
 The latter needs a way to talk to the API server.
-For the two containers to be able to talk to each other, we can either map their their ports on the host machine and use that for request routing or we can place the containers in a single private network and access directly.
+For the two containers to be able to talk to each other, we can either map their ports on the host machine and use that for request routing or we can place the containers in a single private network and access directly.
 Docker has an excellent support of networking and provides helpful commands to deal with networks.
 Additionally, in a Docker network containers identify themselves using their names as hostnames to avoid hunting for their IP addresses in the private network.
 However, we are not going to do any of this manually, instead we will be using Docker Compose to automate many of these tasks.
@@ -867,6 +867,14 @@ Creating linkextractor_redis_1 ... done
 Now, that all three services are up, access the web interface by [clicking the Link Extractor](/){:data-term=".term1"}{:data-port="80"}.
 There should be no visual difference from the previous step.
 However, if you extract links from a page with a lot of links, the first time it should take longer, but the successive attempts to the same page should return the response fairly quickly.
+To check whether or not the Redis service is being utilized, we can use `docker-compose exec` followed by the `redis` service name and the Redis CLI's [monitor](https://redis.io/commands/monitor) command:
+
+```.term1
+docker-compose exec redis redis-cli monitor
+```
+
+Now, try to extract links from some web pages using the web interface and see the difference in Redis log entries for pages that are scraped the first time and those that are repeated.
+Before continuing further with the tutorial, stop the interactive `monitor` stream as a result of the above `redis-cli` command by pressing `Ctrl + C` keys while the interactive terminal is in focus.
 
 Now that we are not mounting the `/www` folder inside the container, local changes should not reflect in the running service:
 
@@ -934,7 +942,7 @@ Some significant changes from the previous step include:
 
 Notice that the `./api` folder does not contain any Python scripts, instead, it now has a Ruby file and a `Gemfile` to manage dependencies.
 
-Let's have a quick walk through the changes files:
+Let's have a quick walk through the changed files:
 
 ```.term1
 cat api/linkextractor.rb
@@ -1004,7 +1012,7 @@ cat api/Dockerfile
 ```
 
 ```dockerfile
-FROM       ruby:2
+FROM       ruby:2.6
 LABEL      maintainer="Sawood Alam <@ibnesayeed>"
 
 ENV        LANG C.UTF-8

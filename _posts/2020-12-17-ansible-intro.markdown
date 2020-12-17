@@ -10,14 +10,14 @@ terms: 1
 ---
 # Basics Installieren
 
-Damit wir Ansible nutzen können, benötigen wir als erstes Ansible auf unserem node1:
+Um Ansible nutzen zu können, benötigen wir als erstes Ansible auf unserem node1:
 
 ```.term1
 apk add ansible
 ```
 
 
-Damit wir gleich unsere Playbooks vorhanden haben, muss noch das GIT-Repository gecloned werden
+Danach brauchen wir noch die richtigen Playbooks für dieses Lab. Diese clonen wir uns einfach von GitHub:
 ```.term1
 git clone https://github.com/svalabs/ansible-demo && cd ansible-demo
 ```
@@ -50,6 +50,8 @@ Um das Playbook auszuführen führt einfach folgendes Kommando aus:
 ansible-playbook playbook.yaml
 ```
 
+
+Die Ausgabe im Terminal sollte etwa so aussehen:
 ```
 $ ansible-playbook playbook.yaml
 [WARNING]: No inventory was parsed, only implicit localhost is available
@@ -79,7 +81,7 @@ Jetzt sollten wir prüfen, dass unser Webserver auch wirklich läuft. [**Hier ge
 # Beispiel 2
 
 
-Damit weitergehen kann, bitte in den Branch step2 wechseln:
+Weiter gehts im branch step2:
 
 ```.term1
 git checkout step2
@@ -87,7 +89,7 @@ git checkout step2
 
 Wir haben vorher unseren Webserver installiert und können diesen auch erreichen. Aber eigentlich wollen wir dort ja auch unsere Mega-Geile Website anzeigen.
 
-Aus diesem grund kommt in Step2 nun eine weitere Rolle mit ins Spiel:
+Aus diesem Grund kommt in Step2 nun eine weitere Rolle mit ins Spiel:
 
 ```yaml
 ---
@@ -99,7 +101,7 @@ Aus diesem grund kommt in Step2 nun eine weitere Rolle mit ins Spiel:
 
 Die Rolle Website kopiert die relevaten Daten an den Richtigen Ort, damit unsere Website nun auch ordentlich angezeigt wird.
 
-Damit diese Änderung nun auch auf unseren Server angewendet wird, müssen wir ansible neu laufen lassen:
+Diese Änderung lassen wir nun auf unserem Server anwenden indem wir erneut das Playbook starten:
 
 ```.term1
 ansible-playbook playbook.yaml

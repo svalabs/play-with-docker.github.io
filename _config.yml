@@ -58,3 +58,4 @@ plugins_dir:
 
 # Play with Docker
 pwdurl: https://labs.play-with-docker.com
+websocket_url: "ws://localhost:3030/progress"

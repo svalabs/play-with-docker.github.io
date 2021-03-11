@@ -1,33 +1,129 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-function myFunction() {
-
-  const scroller = document.getElementById('myDIV');
-
-  let height = scroller.clientHeight;
-  let scrollHeight = scroller.scrollHeight - height;
-  let scrollTop = scroller.scrollTop;
-  let percent = Math.floor(scrollTop / scrollHeight * 100);
-
-  $.get(
-    "https://nr.sva.dev/scrollbar",
-    {percentage: percent, user: document.cookie.match(new RegExp('(^| )username=([^;]+)'))[2], lesson: window.location.pathname },
-    function(data) {
-       console.log('yay');
+    const isEnabled = () => {
+        return document.getElementById('myDIV') !== null;
     }
-  );
 
-}
+    const getCourseProgress = () => {
+        const scroller = document.getElementById('myDIV');
+        let height = scroller.clientHeight;
+        let scrollHeight = scroller.scrollHeight - height;
+        let scrollTop = scroller.scrollTop;
+        return Math.floor(scrollTop / scrollHeight * 100);
+    };
 
-if (document.cookie.match(new RegExp('(^| )username=([^;]+)'))){
-  console.log('is set');
-} else {
-  console.log('not set');
-  var d = new Date();
-  d.setTime(d.getTime() + (30*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  var person = prompt("Please enter your name", "Harry Potter");
-  document.cookie = "username=" + person + ";" + expires + ";path=/";
-}
+    function debounce(method, delay) {
+        clearTimeout(method._tId);
+        method._tId= setTimeout(function(){
+            method();
+        }, delay);
+    }
 
+    const getCourseName = () => {
+        const searchParams = new URLSearchParams(window.location.search);
+        if(searchParams.has("course")) {
+            return searchParams.get("course");
+        }
+
+        return "main";
+    }
+
+    const getUserName = () => {
+        return localStorage.getItem("wtop.userName");
+    }
+
+    const getUserID = () => {
+        return localStorage.getItem("wtop.userId");
+    };
+
+    const getStatus = () => {
+        const status = {
+            progress: getCourseProgress(),
+            userName: getUserName() || "Harry Potter",
+            userId: getUserID(),
+            course: getCourseName(),
+            lesson: window.location.pathname.replaceAll("/", "")
+        };
+
+        return JSON.stringify(status);
+    }
+
+    // This is supposed to be at least somewhat unique...
+    function uuidv4() {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+    }
+
+    const isNameInitialized = () => {
+        return getUserName() !== null;
+    }
+
+    const isIDInitialized = () => {
+        return getUserID() !== null;
+    }
+
+    const throttle = (fn, wait) => {
+        let time = Date.now();
+        return function() {
+            if ((time + wait - Date.now()) < 0) {
+                fn();
+                time = Date.now();
+            }
+        }
+    };
+
+    const sendUpdate = () => {
+        window.statusSocket.send(
+            getStatus()
+        );
+    };
+
+    $( document ).ready(function() {
+        const statusSocketAddress = "{{ site.websocket_url }}";
+
+        if(isEnabled() && !window.statusSocket) {
+            console.log("Connecting to status WebSocket.")
+            window.statusSocket = new WebSocket(statusSocketAddress);
+
+            window.statusSocket.addEventListener('close', () => {
+                setTimeout(function() {
+                    window.statusSocket = new WebSocket(statusSocketAddress);
+                }, 1000);
+            });
+
+            window.statusSocket.addEventListener('open', () => {
+                sendUpdate();
+            });
+
+            window.statusSocket.onerror = function(err) {
+                console.error('Socket encountered error: ', err.message, 'Closing socket');
+                window.statusSocket.close();
+            };
+
+            $("#myDIV").scroll(throttle(sendUpdate, 250));
+        }
+    });
+
+    function myFunction() {
+        if(isEnabled() && window.statusSocket && window.statusSocket.readyState === WebSocket.OPEN) {
+            debounce(() => {
+                window.statusSocket.send(
+                    getStatus()
+                );
+            }, 100);
+        }
+    }
+
+    if(!isNameInitialized()) {
+        // Set up our name
+        const person = prompt("Please enter your name", "Harry Potter");
+        localStorage.setItem("wtop.userName", person);
+    }
+
+    if(!isIDInitialized()) {
+        // We provide a default value for the name and it's not entirely unlikely that people will simply press enter
+        // So to differentiate between them I've setup a UUID.
+        localStorage.setItem("wtop.userId", uuidv4());
+    }
 </script>

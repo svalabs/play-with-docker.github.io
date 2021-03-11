@@ -10,3 +10,6 @@ Alternately, clone the repo and run the following docker container: `docker run 
 
 Browse the site by visiting http://localhost:4000
 
+# Tracking the progress
+
+To track the progress of attendees please update the WebSocket URL in _config.yml and restart the containers.

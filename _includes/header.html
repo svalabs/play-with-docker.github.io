@@ -1,5 +1,26 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
+    /**
+     * String.prototype.replaceAll() polyfill
+     * https://gomakethings.com/how-to-replace-a-section-of-a-string-with-another-one-with-vanilla-js/
+     * @author Chris Ferdinandi
+     * @license MIT
+     */
+    if (!String.prototype.replaceAll) {
+        String.prototype.replaceAll = function(str, newStr){
+
+            // If a regex pattern
+            if (Object.prototype.toString.call(str).toLowerCase() === '[object regexp]') {
+                return this.replace(str, newStr);
+            }
+
+            // If a string
+            return this.replace(new RegExp(str, 'g'), newStr);
+
+        };
+    }
+
+
     const isEnabled = () => {
         return document.getElementById('myDIV') !== null;
     }
@@ -14,7 +35,7 @@
 
     function debounce(method, delay) {
         clearTimeout(method._tId);
-        method._tId= setTimeout(function(){
+        method._tId = setTimeout(function(){
             method();
         }, delay);
     }
